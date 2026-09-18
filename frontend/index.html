@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Livraria C · Gestão</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">LC</div>
+        <div><strong>Livraria C</strong><span>gestão empresarial</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard"><span>Visão geral</span><small>01</small></button>
+        <button class="nav-item" data-view="clientes"><span>Clientes</span><small>02</small></button>
+        <button class="nav-item" data-view="produtos"><span>Livros</span><small>03</small></button>
+        <button class="nav-item" data-view="vendas"><span>Vendas</span><small>04</small></button>
+        <button class="nav-item" data-view="relatorios"><span>Relatórios</span><small>05</small></button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema">Tema <span id="themeLabel">escuro</span></button>
+        <p>Frontend demonstrativo<br><span>Projeto acadêmico em C</span></p>
+      </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="pageEyebrow">OPERAÇÃO</p>
+          <h1 id="pageTitle">Visão geral</h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="sync-note">Dados locais do navegador</span>
+          <button class="button primary" id="primaryAction" type="button">Nova venda</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard" aria-labelledby="pageTitle">
+        <div class="metric-grid" id="metricGrid"></div>
+        <div class="dashboard-grid">
+          <section class="panel wide">
+            <div class="section-heading">
+              <div><p class="kicker">ATENÇÃO</p><h2>Estoque que pede reposição</h2></div>
+              <button class="text-button" data-go="produtos">Ver estoque completo</button>
+            </div>
+            <div id="lowStockList" class="data-list"></div>
+          </section>
+          <section class="panel">
+            <div class="section-heading"><div><p class="kicker">RITMO</p><h2>Vendas recentes</h2></div></div>
+            <div id="recentSales" class="activity-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-clientes">
+        <div class="toolbar">
+          <label class="search-field"><span class="sr-only">Buscar clientes</span><input id="clientSearch" type="search" placeholder="Buscar por nome, CPF ou cidade" /></label>
+          <button class="button primary" data-open="clientDialog">Cadastrar cliente</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Código</th><th>Cliente</th><th>CPF</th><th>Contato</th><th>Cidade</th><th></th></tr></thead><tbody id="clientsTable"></tbody></table></div>
+        <div class="empty-state" id="clientsEmpty" hidden><strong>Nenhum cliente por aqui.</strong><span>Cadastre o primeiro cliente para começar a vender.</span></div>
+      </section>
+
+      <section class="view" id="view-produtos">
+        <div class="toolbar">
+          <label class="search-field"><span class="sr-only">Buscar livros</span><input id="productSearch" type="search" placeholder="Buscar por título, autor ou categoria" /></label>
+          <button class="button primary" data-open="productDialog">Cadastrar livro</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Código</th><th>Livro</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th></th></tr></thead><tbody id="productsTable"></tbody></table></div>
+        <div class="empty-state" id="productsEmpty" hidden><strong>A estante digital está vazia.</strong><span>Cadastre um livro e informe o estoque inicial.</span></div>
+      </section>
+
+      <section class="view" id="view-vendas">
+        <div class="sales-hero">
+          <div><p class="kicker">CAIXA</p><h2>Registre a venda sem perder o estoque de vista.</h2><p>O protótipo impede quantidade acima do disponível e atualiza os indicadores localmente.</p></div>
+          <button class="button primary large" data-open="saleDialog">Registrar venda</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Venda</th><th>Data</th><th>Cliente</th><th>Itens</th><th>Total</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+        <div class="empty-state" id="salesEmpty" hidden><strong>Nenhuma venda registrada.</strong><span>Quando o caixa começar a trabalhar, o histórico aparece aqui.</span></div>
+      </section>
+
+      <section class="view" id="view-relatorios">
+        <div class="report-intro"><p class="kicker">LEITURA</p><h2>O que os números estão dizendo</h2><p>Resumo calculado a partir dos dados desta demonstração.</p></div>
+        <div class="report-grid" id="reportGrid"></div>
+        <section class="panel report-panel"><div class="section-heading"><div><p class="kicker">ESTOQUE</p><h2>Produtos em nível baixo</h2></div></div><div id="reportLowStock" class="data-list"></div></section>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="clientDialog" class="dialog">
+    <form method="dialog" id="clientForm">
+      <div class="dialog-head"><div><p class="kicker">CLIENTES</p><h2 id="clientDialogTitle">Cadastrar cliente</h2></div><button class="icon-button" value="cancel" aria-label="Fechar">×</button></div>
+      <input type="hidden" name="codigo" />
+      <div class="form-grid">
+        <label class="field full"><span>Nome</span><input name="nome" required maxlength="100" /></label>
+        <label class="field"><span>CPF</span><input name="cpf" required maxlength="20" placeholder="000.000.000-00" /></label>
+        <label class="field"><span>Telefone</span><input name="telefone" required maxlength="24" /></label>
+        <label class="field"><span>E-mail</span><input name="email" type="email" required maxlength="120" /></label>
+        <label class="field"><span>Cidade</span><input name="cidade" required maxlength="80" /></label>
+      </div>
+      <p class="form-error" id="clientError" role="alert"></p>
+      <div class="dialog-actions"><button class="button secondary" value="cancel">Cancelar</button><button class="button primary" type="submit" value="default">Salvar cliente</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="productDialog" class="dialog">
+    <form method="dialog" id="productForm">
+      <div class="dialog-head"><div><p class="kicker">CATÁLOGO</p><h2 id="productDialogTitle">Cadastrar livro</h2></div><button class="icon-button" value="cancel" aria-label="Fechar">×</button></div>
+      <input type="hidden" name="codigo" />
+      <div class="form-grid">
+        <label class="field full"><span>Título</span><input name="titulo" required maxlength="120" /></label>
+        <label class="field"><span>Autor</span><input name="autor" required maxlength="100" /></label>
+        <label class="field"><span>Categoria</span><input name="categoria" required maxlength="60" /></label>
+        <label class="field"><span>Preço</span><input name="preco" type="number" min="0" step="0.01" required /></label>
+        <label class="field"><span>Estoque</span><input name="estoque" type="number" min="0" step="1" required /></label>
+        <label class="field"><span>Estoque mínimo</span><input name="estoqueMinimo" type="number" min="0" step="1" required /></label>
+      </div>
+      <p class="form-error" id="productError" role="alert"></p>
+      <div class="dialog-actions"><button class="button secondary" value="cancel">Cancelar</button><button class="button primary" type="submit" value="default">Salvar livro</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="saleDialog" class="dialog sale-dialog">
+    <form method="dialog" id="saleForm">
+      <div class="dialog-head"><div><p class="kicker">CAIXA</p><h2>Registrar venda</h2></div><button class="icon-button" value="cancel" aria-label="Fechar">×</button></div>
+      <div class="form-grid">
+        <label class="field full"><span>Cliente</span><select name="cliente" id="saleClient" required></select></label>
+        <label class="field full"><span>Livro</span><select name="produto" id="saleProduct" required></select></label>
+        <label class="field"><span>Quantidade</span><input name="quantidade" type="number" min="1" step="1" value="1" required /></label>
+      </div>
+      <div class="sale-summary" id="saleSummary"></div>
+      <p class="form-error" id="saleError" role="alert"></p>
+      <div class="dialog-actions"><button class="button secondary" value="cancel">Cancelar</button><button class="button primary" type="submit" value="default">Finalizar venda</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
